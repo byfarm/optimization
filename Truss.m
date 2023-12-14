@@ -2,53 +2,45 @@
 
 classdef Truss
     properties
-        nodes;
-        beams;
-        constraints;
-        loads;
+        nodes; % all the nodes in the truss
+        beams; % all the beams in the truss
     end
 
     methods
         % need to make a node object to keep coords and constraints in same place
-        function obj = add_node(obj, coords, constriant)
+        function obj = add_node(obj, coords, constraint, forces)
             % adds a node to the truss
             arguments
                 obj (1, 1) Truss % truss object
-                coords (3, 1) % coordinates for the node
-                constraint (3, 1) % constraint for the node
+                coords (1, 3) % coordinates for the node
+                constraint (1, 3) = [false,false,false] % constraint for the node
+                forces (1, 3) = [0,0,0] % the force vector on the node
             end
 
+            new_node = Node(coords, constraint, forces) % create node
+
             % adds the node to the list of nodes
-            obj.nodes = [obj.nodes, coords];
+            obj.nodes = [obj.nodes, new_node];
         end
 
-        function obj = add_beam(obj, node1, node2, E, A)
+        function obj = add_beam(obj, idx_node1, idx_node2, E, A)
             % adds a beam to the truss
             arguments
                 obj (1, 1) Truss % the truss object
-                node1 (1, 1) % the index of node 1 for the beam
-                node2 (1, 1) % the index of the 2nd node for the beam in the Truss object
-                E (1, 1) % young's modulus
-                A (1, 1) % area of the beam
+                idx_node1 (1, 1) int8 % the index of node 1 for the beam
+                idx_node2 (1, 1) int8 % the index of the 2nd node for the beam in the Truss object
+                E (1, 1) double % young's modulus
+                A (1, 1) double % area of the beam
             end
 
             % finds the nodes based off the indexes passed in
-            node1 = obj.nodes(node1);
-            node2 = obj.nodes(node2);
+            node1 = obj.nodes(idx_node1);
+            node2 = obj.nodes(idx_node2);
 
             % adds the beam to the list of beam objects
             obj.beams = [obj.beams, Beam(node1, node2, E, A)];
         end
 
-        function obj = add_consrtaint(obj, node, constraint)
-            % adds a constraint to the truss
-            arguments
-                obj (1, 1) Truss
-                node (1, 1)
-                constraint (3, 1)
-            end
-            obj.constraints = [obj.constraints, node; constraint];
-        end
         function build()
         end
         function solve()
