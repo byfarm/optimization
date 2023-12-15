@@ -102,6 +102,18 @@ classdef Truss
             obj.x_mat = obj.k_mat\obj.p_mat;
             obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
         end
+        
+        function obj = plot_truss(obj)
+            plot_matrix = zeros(6, obj.num_beams);
+            for i = 1:obj.num_beams
+                plot_matrix(:,i) = [obj.beams(i).node1.coords, obj.beams(i).node2.coords];
+            end
+            fh = figure;
+            ah = axes(fh);
+            hold(ah, 'on');
+            plot_matrix
+            line([plot_matrix(1,:);plot_matrix(4,:)],[plot_matrix(2,:);plot_matrix(5,:)])
+        end
     end
 
     methods (Access = private)
