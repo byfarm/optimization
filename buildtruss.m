@@ -15,7 +15,7 @@ beam_nodes = [
 ];
 
 
-truss = Truss;
+truss = Truss();
 
 
 % this is the loads for case 1
@@ -32,8 +32,15 @@ for i = 3:-1:1
     truss = truss.add_node([(i-1) * 360,0,0], [constrained, constrained, false], forces);
 end
 
+% adds the beam to the structure
 for i = 1:10
     node1 = beam_nodes(i,1);
     node2 = beam_nodes(i,2);
     truss = truss.add_beam(node1, node2, YOUNGS, AREA);
 end
+
+truss = truss.build();
+truss = truss.solve();
+
+sigma = truss.f_mat ./ AREA
+displacement = truss.x_mat

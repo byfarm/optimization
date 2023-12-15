@@ -7,6 +7,9 @@ classdef Truss
         freedom; % the degrees of freedom
         k_mat; % the k-matrix
         a_mat; % the a-matrix
+        p_mat; % the p-matrix
+        x_mat; % the x-matrix
+        f_mat; % the f-matrix
     end
 
     properties (Access = private)
@@ -15,11 +18,20 @@ classdef Truss
         num_nodes = 0; % the number of nodes
         s_mat; % the s-matrix
         b_mat; % the b-matrix
+        dimention;
     end
 
     methods
+        function obj = Truss(dimention)
+            arguments
+                dimention (1,1) = 2 % number of dimentions assesing
+            end
+            % sets the number of dimentions that will be analyzed
+            obj.dimention = dimention;
+        end
+
         % need to make a node object to keep coords and constraints in same place
-        function obj = add_node(obj, coords, constraint, forces, dimention)
+        function obj = add_node(obj, coords, constraint, forces)
             % adds a node to the truss
             arguments
                 obj (1, 1) Truss % truss object
@@ -27,17 +39,27 @@ classdef Truss
                 constraint (1, 3) = [false,false,false] % constraint for the node
             % false is free
                 forces (1, 3) = [0,0,0] % the force vector on the node
-                dimention (1,1) = 2 % number of dimentions assesing
+            end
+
+            % make sure all in 2d if only anayzing two dimentions
+            if obj.dimention == 2
+                constraint(end) = false;
+                forces(end) = 0;
+                coords(end) = 0;
             end
 
             new_node = Node(coords, constraint, forces); % create node
 
-            % add the degrees of freedom for the node
-            for i = 1:dimention
+            % add the degrees of freedom for the node and make p_mat
+            for i = 1:obj.dimention
                 if constraint(i) == false
                     tmp = [false,false,false];
                     tmp(i) = true;
                     obj.freedom = [obj.freedom, DegreeFreedom(new_node, tmp)];
+
+                    % make p_mat
+                    ptmp = dot(double(tmp), forces);
+                    obj.p_mat = [obj.p_mat; ptmp];
                 end
             end
 
@@ -79,6 +101,8 @@ classdef Truss
         end
 
         function obj = solve(obj, sigma_min)
+            obj.x_mat = obj.k_mat\obj.p_mat;
+            obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
         end
     end
 
@@ -118,6 +142,7 @@ classdef Truss
                         v1 = double(obj.freedom(row).vector);
                         v2 = obj.beams(col).vector;
                         dotprod = dot(v1, v2);
+                        % I honestly don't know how this works but it does
                         cos_angle = -dot(v1, v2) / (norm(v1) * norm(v2));
                         a_mat(row, col) = cos_angle;
 
@@ -127,12 +152,8 @@ classdef Truss
             obj.a_mat = a_mat; % assign to object
         end
 
+        function obj = build_p_mat(obj)
+            % builds the p matrix
+        end
     end
-
-
-
-
 end
-
-
-% need to add an external force function

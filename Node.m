@@ -20,14 +20,6 @@ classdef Node
             obj.forces = forces;
         end
 
-        function obj = add_force(obj, forces)
-            % adds a force onto the existing node
-            arguments
-                obj (1,1) Node
-                forces (1, 3) {mustBeNumeric}
-            end
-            obj.forces = obj.forces + forces;
-        end
     end
 
 end
