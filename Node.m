@@ -28,16 +28,6 @@ classdef Node
             end
             obj.forces = obj.forces + forces;
         end
-
-        function obj = change_constraints(obj, constraints)
-            % makes it possible to change the constraints of a node once init
-            arguments
-                obj (1,1) Node
-                constraints (1, 3) {mustBeNumeric}
-            end
-            obj.constraints = constraints;
-        end
-
     end
 
 end
