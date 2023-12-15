@@ -10,9 +10,11 @@ classdef Node
         function obj = Node(coords, constraints, forces)
             % initializes the node object
             arguments
-                coords (1, 3) {mustBeNumeric}
-                constraints (1, 3) {islogical} = [false, false, false]
-                forces (1, 3) {mustBeNumeric} = [0,0,0]
+                coords (1, 3) double {mustBeNumeric}
+                % constraints are free by default
+                constraints (1, 3) logical {islogical} = [false, false, false]
+                % forces are zero by default
+                forces (1, 3) double {mustBeNumeric} = [0,0,0]
             end
 
             obj.coords = coords;

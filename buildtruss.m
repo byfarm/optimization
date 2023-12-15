@@ -39,8 +39,10 @@ for i = 1:10
     truss = truss.add_beam(node1, node2, YOUNGS, AREA);
 end
 
+% build and solve the structure
 truss = truss.build();
 truss = truss.solve();
 
-sigma = truss.f_mat ./ AREA
+% cacl displacement and normal stress
+stress = truss.f_mat ./ AREA
 displacement = truss.x_mat

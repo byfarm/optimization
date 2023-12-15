@@ -1,10 +1,10 @@
-
-
 classdef Truss
     properties
         nodes; % all the nodes in the truss
         beams; % all the beams in the truss
         freedom; % the degrees of freedom
+        s_mat; % the s-matrix
+        b_mat; % the b-matrix
         k_mat; % the k-matrix
         a_mat; % the a-matrix
         p_mat; % the p-matrix
@@ -16,15 +16,13 @@ classdef Truss
         deg_free = 0; % the degrees of freedom
         num_beams = 0; % the number of beams
         num_nodes = 0; % the number of nodes
-        s_mat; % the s-matrix
-        b_mat; % the b-matrix
-        dimention;
+        dimention; % the number of dimentions analyzing
     end
 
     methods
         function obj = Truss(dimention)
             arguments
-                dimention (1,1) = 2 % number of dimentions assesing
+                dimention (1,1) uint8 {mustBePositive} = 2 
             end
             % sets the number of dimentions that will be analyzed
             obj.dimention = dimention;
@@ -71,8 +69,8 @@ classdef Truss
             % adds a beam to the truss
             arguments
                 obj (1, 1) Truss % the truss object
-                idx_node1 (1, 1) int8 % the index of node 1 for the beam
-                idx_node2 (1, 1) int8 % the index of the 2nd node for the beam in the Truss object
+                idx_node1 (1, 1) uint16 % the index of node 1 for the beam
+                idx_node2 (1, 1) uint16 % the index of the 2nd node for the beam in the Truss object
                 E (1, 1) double % young's modulus
                 A (1, 1) double % area of the beam
             end
@@ -100,7 +98,7 @@ classdef Truss
             obj.k_mat = obj.a_mat * obj.s_mat * obj.b_mat;
         end
 
-        function obj = solve(obj, sigma_min)
+        function obj = solve(obj)
             obj.x_mat = obj.k_mat\obj.p_mat;
             obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
         end
@@ -122,7 +120,7 @@ classdef Truss
 
         function obj = build_a_mat(obj)
             % builds the a matrix
-            a_mat = zeros(obj.deg_free, obj.num_beams);
+            obj.a_mat = zeros(obj.deg_free, obj.num_beams);
 
             % go thru each and column
             for col = 1:obj.num_beams
@@ -131,11 +129,12 @@ classdef Truss
                     % if nodes match then insert the angle int a_mat
                     if obj.freedom(row).node.coords == obj.beams(col).node1.coords
 
+                        % find the cos by normalizing the dot product
                         v1 = double(obj.freedom(row).vector);
                         v2 = obj.beams(col).vector;
                         dotprod = dot(v1, v2);
                         cos_angle = dot(v1, v2) / (norm(v1) * norm(v2));
-                        a_mat(row, col) = cos_angle;
+                        obj.a_mat(row, col) = cos_angle;
 
                     elseif obj.freedom(row).node.coords == obj.beams(col).node2.coords
 
@@ -144,16 +143,12 @@ classdef Truss
                         dotprod = dot(v1, v2);
                         % I honestly don't know how this works but it does
                         cos_angle = -dot(v1, v2) / (norm(v1) * norm(v2));
-                        a_mat(row, col) = cos_angle;
+                        obj.a_mat(row, col) = cos_angle;
 
                     end
                 end
             end
-            obj.a_mat = a_mat; % assign to object
         end
 
-        function obj = build_p_mat(obj)
-            % builds the p matrix
-        end
     end
 end

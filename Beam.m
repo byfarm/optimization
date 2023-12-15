@@ -19,8 +19,8 @@ classdef Beam
                 node2 (1, 1) Node % the node2 object
                 young (1,1) double {mustBePositive} % young's modulus of the beam
                 area (1,1) double {mustBePositive} % the area of the beam
-                i1 (1,1) int8
-                i2 (1,1) int8
+                i1 (1,1) int16
+                i2 (1,1) int16
             end
             obj.node1 = node1;
             obj.node2 = node2;
