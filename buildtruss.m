@@ -20,6 +20,7 @@ truss = Truss(2);
 
 
 % this is the loads for case 1
+% build the nodes
 for i = 3:-1:1
     if i == 1
         constrained = true;
@@ -47,3 +48,5 @@ truss = truss.solve();
 % cacl displacement and normal stress
 stress = truss.f_mat ./ AREA
 displacement = truss.x_mat
+
+truss.plot();

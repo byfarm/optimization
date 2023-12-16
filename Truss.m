@@ -103,11 +103,11 @@ classdef Truss
             obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
         end
         
-        function obj = plot_truss(obj)
+        function obj = plot(obj)
             figure('Position', [10 10 1200 600])
 
             % plot the beams
-            plot_matrix = obj.get_beam_points()
+            plot_matrix = obj.get_beam_points();
             if obj.dimention == 3
                 bm = plot3([plot_matrix(1,:);plot_matrix(4,:)],[plot_matrix(2,:);plot_matrix(5,:)],[plot_matrix(3,:);plot_matrix(6,:)], 'Color', 'black', 'DisplayName', 'Beams');
             elseif obj.dimention == 2

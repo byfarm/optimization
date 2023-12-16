@@ -21,9 +21,8 @@ p_mat = [
   -1440;
   1920;
   0;
-  11440;
+  1440;
 ];
-
 
 % calculate the s matrix 
 elastic_modulus(1,1:8) = 30000; % ksi
