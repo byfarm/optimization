@@ -15,6 +15,7 @@ beam_nodes = [
 ];
 
 
+% 2 is the number of dimentions
 truss = Truss(2);
 
 
