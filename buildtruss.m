@@ -15,7 +15,7 @@ beam_nodes = [
 ];
 
 
-truss = Truss();
+truss = Truss(2);
 
 
 % this is the loads for case 1

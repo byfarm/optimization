@@ -104,15 +104,48 @@ classdef Truss
         end
         
         function obj = plot_truss(obj)
+            figure
             plot_matrix = zeros(6, obj.num_beams);
+            % put cords of each beam into matrix
             for i = 1:obj.num_beams
                 plot_matrix(:,i) = [obj.beams(i).node1.coords, obj.beams(i).node2.coords];
             end
-            fh = figure;
-            ah = axes(fh);
-            hold(ah, 'on');
-            plot_matrix
-            line([plot_matrix(1,:);plot_matrix(4,:)],[plot_matrix(2,:);plot_matrix(5,:)])
+
+            % plot the matrix
+            if obj.dimention == 3
+                plot3([plot_matrix(1,:);plot_matrix(4,:)],[plot_matrix(2,:);plot_matrix(5,:)],[plot_matrix(3,:);plot_matrix(6,:)], 'Color', 'black')
+            elseif obj.dimention == 2
+                line([plot_matrix(1,:);plot_matrix(4,:)],[plot_matrix(2,:);plot_matrix(5,:)], 'Color', 'black', 'DisplayName', 'Beams')
+            end
+
+            title('Truss')
+            hold on
+
+            % plot the degrees of freedom
+            deg_freedom = obj.get_free_points();
+            if obj.dimention == 3
+                quiver(deg_freedom(1,:), deg_freedom(2,:), deg_freedom(4,:)-deg_freedom(1,:),deg_freedom(5,:)-deg_freedom(2,:),deg_freedom(3,:), deg_freedom(6,:)-deg_freedom(3,:),0,'Color', 'blue')
+            elseif obj.dimention == 2
+                quiver(deg_freedom(1,:), deg_freedom(2,:), deg_freedom(4,:)-deg_freedom(1,:),deg_freedom(5,:)-deg_freedom(2,:),0,'Color', 'blue', 'DisplayName', 'Degrees of Freedom')
+            end
+
+            % plot the forces
+            forces = obj.get_force_points();
+            if obj.dimention == 3
+                quiver(forces(1,:), forces(2,:), forces(4,:)-forces(1,:),forces(5,:)-forces(2,:),0,'Color', 'red')
+            elseif obj.dimention == 2
+                quiver(forces(1,:), forces(2,:), forces(4,:)-forces(1,:),forces(5,:)-forces(2,:),0,'Color', 'red', 'DisplayName', 'Forces')
+            end
+
+            % plot the constraints
+            constraints = obj.get_constraint_points();
+            if obj.dimention == 3
+                quiver(constraints(1,:), constraints(2,:), constraints(4,:)-constraints(1,:),constraints(5,:)-constraints(2,:),0,'Color', 'green')
+            elseif obj.dimention == 2
+                quiver(constraints(1,:), constraints(2,:), constraints(4,:)-constraints(1,:),constraints(5,:)-constraints(2,:),0,'Color', 'green', 'DisplayName', 'Constraints')
+            end
+            hold off
+            % legend('Beams','Degrees of Freedom', 'Forces', 'Constraints')
         end
     end
 
@@ -158,6 +191,37 @@ classdef Truss
                         obj.a_mat(row, col) = cos_angle;
 
                     end
+                end
+            end
+        end
+
+        function freepnts = get_free_points(obj)
+            % get the coordinates to plot the deg of freedom vectors
+            freepnts = zeros(6, obj.deg_free);
+            for i = 1:obj.deg_free
+                newpnt = obj.freedom(i).node.coords + 50*(obj.freedom(i).vector);
+                freepnts(:,i) = [obj.freedom(i).node.coords, newpnt];
+            end
+        end
+
+        function forcepnts = get_force_points(obj)
+            % gets the coordinates to plot the force vectors
+            forcepnts = zeros(6, obj.num_nodes);
+            for i = 1:obj.num_nodes
+                newpnt = obj.nodes(i).coords + obj.nodes(i).forces;
+                forcepnts(:,i) = [obj.nodes(i).coords, newpnt];
+            end
+        end
+
+        function constraintpnts = get_constraint_points(obj)
+            % gets the coordinates to plot the constraint vectors
+            constraintpnts = zeros(6, obj.num_nodes);
+            for i = 1:obj.num_nodes
+                for j = 1:3
+                    zerarr = zeros(1, 3);
+                    zerarr(j) = 50*double(obj.nodes(i).constraints(j));
+                    newpnt = obj.nodes(i).coords + zerarr;
+                    constraintpnts(:,3*i+j) = [obj.nodes(i).coords, newpnt];
                 end
             end
         end
