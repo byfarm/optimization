@@ -17,6 +17,7 @@ classdef Truss
         num_beams = 0; % the number of beams
         num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
+        plot_multiplier = 0; % how big the arrows will be when plotting
     end
 
     methods
@@ -28,7 +29,7 @@ classdef Truss
             obj.dimention = dimention;
         end
 
-        % need to make a node object to keep coords and constraints in same place
+
         function obj = add_node(obj, coords, constraint, forces)
             % adds a node to the truss
             arguments
@@ -65,6 +66,7 @@ classdef Truss
             obj.nodes = [obj.nodes, new_node];
         end
 
+
         function obj = add_beam(obj, idx_node1, idx_node2, E, A)
             % adds a beam to the truss
             arguments
@@ -83,6 +85,7 @@ classdef Truss
             obj.beams = [obj.beams, Beam(node1, node2, E, A, idx_node1, idx_node2)];
             obj.num_beams = obj.num_beams + 1;
         end
+
 
         function obj = build(obj)
             % builds all the matrixis
@@ -103,8 +106,11 @@ classdef Truss
             obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
         end
         
+
         function obj = plot(obj)
             figure('Position', [10 10 1200 600])
+            obj = obj.find_plot_multiplier();
+            obj.plot_multiplier
 
             % plot the beams
             plot_matrix = obj.get_beam_points();
@@ -159,6 +165,7 @@ classdef Truss
             obj.s_mat = s_mat;
         end
 
+
         function obj = build_a_mat(obj)
             % builds the a matrix
             obj.a_mat = zeros(obj.deg_free, obj.num_beams);
@@ -191,6 +198,7 @@ classdef Truss
             end
         end
 
+
         function beampnts = get_beam_points(obj)
             % put cords of each beam into matrix
             for i = 1:obj.num_beams
@@ -198,32 +206,45 @@ classdef Truss
             end
         end
 
+
         function freepnts = get_free_points(obj)
             % get the coordinates to plot the deg of freedom vectors
             for i = 1:obj.deg_free
-                newpnt = obj.freedom(i).node.coords + 50*(obj.freedom(i).vector);
+                newpnt = obj.freedom(i).node.coords + obj.plot_multiplier*(obj.freedom(i).vector);
                 freepnts(:,i) = [obj.freedom(i).node.coords, newpnt];
             end
         end
 
+
         function forcepnts = get_force_points(obj)
             % gets the coordinates to plot the force vectors
             for i = 1:obj.num_nodes
-                newpnt = obj.nodes(i).coords + obj.nodes(i).forces;
+                forcefactor = obj.nodes(i).forces ./ norm(obj.nodes(i).forces);
+                newpnt = obj.nodes(i).coords + forcefactor*obj.plot_multiplier;
                 forcepnts(:,i) = [obj.nodes(i).coords, newpnt];
             end
         end
 
+        
         function constraintpnts = get_constraint_points(obj)
             % gets the coordinates to plot the constraint vectors
             for i = 1:obj.num_nodes
                 for j = 1:3
                     zerarr = zeros(1, 3);
-                    zerarr(j) = 50*double(obj.nodes(i).constraints(j));
+                    zerarr(j) = obj.plot_multiplier*double(obj.nodes(i).constraints(j));
                     newpnt = obj.nodes(i).coords + zerarr;
                     constraintpnts(:,3*i+j) = [obj.nodes(i).coords, newpnt];
                 end
             end
+        end
+
+
+        function obj = find_plot_multiplier(obj)
+            % sets the size of the vectors to be plotted to be 1/4 the size of a beam
+            for i=1:obj.num_beams
+                obj.plot_multiplier = max(obj.plot_multiplier, obj.beams(i).length);
+            end
+            obj.plot_multiplier = obj.plot_multiplier/4;
         end
 
     end

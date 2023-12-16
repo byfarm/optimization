@@ -9,7 +9,7 @@ beam_nodes = [
     4,3;
     1,4;
     2,3;
-    3,5;
+    5,3;
 ];
 
 
@@ -21,7 +21,7 @@ truss = truss.add_node([9,12,0],[false,false,false],[-1400,1920,0]);
 truss = truss.add_node([9,0,0],[false,true,false]);
 truss = truss.add_node([18,0,0],[false,true,false],[1440,0,0]);
 
-for i = 1:8
+for i = 1:size(beam_nodes)
     node1 = beam_nodes(i,1);
     node2 = beam_nodes(i,2);
     truss = truss.add_beam(node1, node2, YOUNGS, areas(i));
