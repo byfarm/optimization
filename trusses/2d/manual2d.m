@@ -1,6 +1,5 @@
 clear;
 
-
 h = hypot(9,12); % find geometry
 
 % build a and b matrix

@@ -21,7 +21,6 @@ classdef Node
             obj.constraints = constraints;
             obj.forces = forces;
         end
-
     end
 
 end

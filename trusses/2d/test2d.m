@@ -26,3 +26,11 @@ for i = 1:size(beam_nodes)
     node2 = beam_nodes(i,2);
     truss = truss.add_beam(node1, node2, YOUNGS, areas(i));
 end
+
+truss=truss.build();
+truss=truss.solve();
+
+truss.plot();
+
+displacement = truss.x_mat
+forces = truss.f_mat

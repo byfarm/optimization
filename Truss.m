@@ -110,7 +110,6 @@ classdef Truss
         function obj = plot(obj)
             figure('Position', [10 10 1200 600])
             obj = obj.find_plot_multiplier();
-            obj.plot_multiplier
 
             % plot the beams
             plot_matrix = obj.get_beam_points();
