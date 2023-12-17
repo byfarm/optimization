@@ -9,10 +9,13 @@ classdef Beam
         area; % the cross-sectional area of the beam
         length; % the length of the beam
         vector; % the vecotr of the beam
+
+        max_stress; % the max design stress for the beam
+        stress = 0; % the stress once the beam is solved
     end
 
     methods
-        function obj = Beam(node1, node2, young, area, i1, i2)
+        function obj = Beam(node1, node2, young, area, i1, i2, max_stress)
             % initializes the beam object
             arguments
                 node1 (1, 1) Node % the node1 object
@@ -21,6 +24,7 @@ classdef Beam
                 area (1,1) double {mustBePositive} % the area of the beam
                 i1 (1,1) int16
                 i2 (1,1) int16
+                max_stress double
             end
             obj.node1 = node1;
             obj.node2 = node2;
@@ -30,6 +34,17 @@ classdef Beam
             obj.length = norm(obj.vector);
             obj.idx1 = i1;
             obj.idx2 = i2;
+            obj.max_stress = max_stress;
+        end
+
+        function obj = calc_stress(obj, force)
+            % calculates the stress for the beam
+            obj.stress = force / obj.area;
+        end
+
+        function obj = optimize(obj)
+            % uses basic optimization fucntion to optimize beam
+            obj.area = obj.area * (abs(obj.stress) / obj.max_stress);
         end
     end
 

@@ -1,5 +1,5 @@
 YOUNGS = 10000;
-AREA = 10;
+MAXSTRESS = 65;
 
 beam_nodes = [
     5, 3;
@@ -13,6 +13,8 @@ beam_nodes = [
     3, 2;
     4, 1;
 ];
+
+areas = rand(size(beam_nodes)) * 10;
 
 
 % 2 is the number of dimentions
@@ -35,18 +37,10 @@ for i = 3:-1:1
 end
 
 % adds the beam to the structure
-for i = 1:10
+for i = 1:size(beam_nodes)
     node1 = beam_nodes(i,1);
     node2 = beam_nodes(i,2);
-    truss = truss.add_beam(node1, node2, YOUNGS, AREA);
+    truss = truss.add_beam(node1, node2, YOUNGS, areas(i), MAXSTRESS);
 end
 
-% build and solve the structure
-truss = truss.build();
-truss = truss.solve();
-
-% cacl displacement and normal stress
-stress = truss.f_mat ./ AREA
-displacement = truss.x_mat
-
-truss.plot();
+truss = basic_optimize(truss, 50)

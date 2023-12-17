@@ -2,8 +2,10 @@
 
 classdef DegreeFreedom
     properties
-        node;
-        vector;
+        node; % the location/node of the degree of freedom
+        vector; % the direction of the degree of freedom
+
+        displacement; % the displacement along the degree of freedom
     end
 
     methods

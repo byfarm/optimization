@@ -1,4 +1,5 @@
 YOUNGS = 30000;
+MAXSTRESS = 300;
 areas = [3,3,3,5,5,2,2,2];
 
 beam_nodes = [
@@ -24,7 +25,7 @@ truss = truss.add_node([18,0,0],[false,true,false],[1440,0,0]);
 for i = 1:size(beam_nodes)
     node1 = beam_nodes(i,1);
     node2 = beam_nodes(i,2);
-    truss = truss.add_beam(node1, node2, YOUNGS, areas(i));
+    truss = truss.add_beam(node1, node2, YOUNGS, areas(i), MAXSTRESS);
 end
 
 truss=truss.build();

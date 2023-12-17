@@ -1,3 +1,4 @@
+% Truss object which represents the entire truss
 classdef Truss
     properties
         nodes; % all the nodes in the truss
@@ -67,7 +68,7 @@ classdef Truss
         end
 
 
-        function obj = add_beam(obj, idx_node1, idx_node2, E, A)
+        function obj = add_beam(obj, idx_node1, idx_node2, E, A, max_stress)
             % adds a beam to the truss
             arguments
                 obj (1, 1) Truss % the truss object
@@ -75,6 +76,7 @@ classdef Truss
                 idx_node2 (1, 1) uint16 % the index of the 2nd node for the beam in the Truss object
                 E (1, 1) double % young's modulus
                 A (1, 1) double % area of the beam
+                max_stress (1,1) double % max allowable stress on beam
             end
 
             % finds the nodes based off the indexes passed in
@@ -82,7 +84,7 @@ classdef Truss
             node2 = obj.nodes(idx_node2);
 
             % adds the beam to the list of beam objects
-            obj.beams = [obj.beams, Beam(node1, node2, E, A, idx_node1, idx_node2)];
+            obj.beams = [obj.beams, Beam(node1, node2, E, A, idx_node1, idx_node2, max_stress)];
             obj.num_beams = obj.num_beams + 1;
         end
 
@@ -102,8 +104,28 @@ classdef Truss
         end
 
         function obj = solve(obj)
+            % solve for displacemnt and stress
             obj.x_mat = obj.k_mat\obj.p_mat;
             obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
+
+            % calc displacement along each degree of freedom
+            for i = 1:obj.deg_free
+                obj.freedom(i).displacement = obj.x_mat(i);
+            end
+
+            % calc stress for each beam
+            for i = 1:obj.num_beams
+                obj.beams(i) = obj.beams(i).calc_stress(obj.f_mat(i));
+            end
+
+        end
+
+
+        function obj = optimize(obj)
+            % do basic optimization for each beam
+            for i = 1:obj.num_beams
+                obj.beams(i) = obj.beams(i).optimize();
+            end
         end
         
 
