@@ -1,4 +1,4 @@
-YOUNGS = 30000;
+YOUNGS = 3000;
 MAXSTRESS = 300;
 areas = [3,3,3,5,5,2,2,2];
 
@@ -18,7 +18,7 @@ truss = Truss(2);
 
 truss = truss.add_node([0,12,0]);
 truss = truss.add_node([0,0,0],[true,true,false]);
-truss = truss.add_node([9,12,0],[false,false,false],[-1400,1920,0]);
+truss = truss.add_node([9,12,0],[false,false,false],[0,0,0]);
 truss = truss.add_node([9,0,0],[false,true,false]);
 truss = truss.add_node([18,0,0],[false,true,false],[1440,0,0]);
 
@@ -35,3 +35,5 @@ truss.plot();
 
 displacement = truss.x_mat
 forces = truss.f_mat
+
+truss.plot_dis();

@@ -103,6 +103,7 @@ classdef Truss
             obj.k_mat = obj.a_mat * obj.s_mat * obj.b_mat;
         end
 
+
         function obj = solve(obj)
             % solve for displacemnt and stress
             obj.x_mat = obj.k_mat\obj.p_mat;
@@ -129,7 +130,7 @@ classdef Truss
         end
         
 
-        function obj = plot(obj)
+        function plot(obj)
             figure('Position', [10 10 1200 600])
             obj = obj.find_plot_multiplier();
 
@@ -170,7 +171,46 @@ classdef Truss
             hold off
             legend([bm(1), df, forc, cons],'Beams','Degrees of Freedom', 'Forces', 'Constraints', 'Location', 'northeastoutside')
         end
+
+
+        function plot_dis(obj)
+            % plots the displacement of the truss
+
+            newtruss = Truss(obj.dimention);
+            newtruss.nodes = obj.nodes; % insert all nodes
+            newtruss.freedom = obj.freedom; % insult the degrees of freedom
+
+            for i = 1:obj.num_nodes
+                for j = 1:obj.deg_free
+                    if obj.freedom(j).node.coords == obj.nodes(i).coords
+                        % find how much each node has moved
+                        dx = obj.freedom(j).vector * obj.freedom(j).displacement;
+                        newtruss.nodes(i).coords = dx + newtruss.nodes(i).coords;
+                    end
+                end
+            end
+
+            for i = 1:obj.num_nodes
+                for j = 1:obj.deg_free
+                    if obj.freedom(j).node.coords == obj.nodes(i).coords
+                        newtruss.freedom(j).node = newtruss.nodes(i);
+                    end
+                end
+            end
+
+            newtruss.beams = obj.beams; % insert all beams
+            for i = 1:obj.num_beams
+                % reassign beam nodes
+                newtruss.beams(i).node1 = newtruss.nodes(newtruss.beams(i).idx1);
+                newtruss.beams(i).node2 = newtruss.nodes(newtruss.beams(i).idx2);
+            end
+
+            % rebuild and plot the truss
+            newtruss = newtruss.build();
+            newtruss.plot();
+        end
     end
+
 
     methods (Access = private)
 
@@ -265,7 +305,7 @@ classdef Truss
             for i=1:obj.num_beams
                 obj.plot_multiplier = max(obj.plot_multiplier, obj.beams(i).length);
             end
-            obj.plot_multiplier = obj.plot_multiplier/4;
+            obj.plot_multiplier = obj.plot_multiplier/8;
         end
 
     end
