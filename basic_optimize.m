@@ -5,6 +5,7 @@ function truss = basic_optimize(truss, iters)
         iters (1,1) int16 % number of iterations want performed
     end
 
+    truss = truss.init_build();
     for i = 1:iters
         truss = truss.build();
         truss = truss.solve();

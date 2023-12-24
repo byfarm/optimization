@@ -7,11 +7,11 @@ classdef Truss
         x_mat; % the x-matrix
         f_mat; % the f-matrix
         weight;
+        num_beams = 0; % the number of beams
     end
 
     properties (Access = private)
         deg_free = 0; % the degrees of freedom
-        num_beams = 0; % the number of beams
         num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
         plot_multiplier = 0; % how big the arrows will be when plotting
@@ -91,17 +91,21 @@ classdef Truss
         end
 
 
-        function obj = build(obj)
-            % builds all the matrixis
+        function obj = init_build(obj)
+            % builds all the constant matrixis
             obj.num_nodes = size(obj.nodes, 2);
             obj.num_beams = size(obj.beams, 2);
             obj.deg_free = size(obj.freedom, 2);
 
-            obj = obj.build_s_mat();
             obj = obj.build_a_mat();
 
             obj.b_mat = obj.a_mat.';
 
+        end
+
+        function obj = build(obj)
+            % builds the s and k matrix
+            obj = obj.build_s_mat();
             obj.k_mat = obj.a_mat * obj.s_mat * obj.b_mat;
         end
 
@@ -219,6 +223,32 @@ classdef Truss
             % rebuild and plot the truss
             newtruss = newtruss.build();
             newtruss.plot();
+        end
+
+
+        function simpletruss = simplify_truss(obj, areas)
+        arguments
+            obj (1,1) Truss
+            areas (:,1) = 0 % a list of areas for each beam
+        end
+
+            % if areas are not provided then build from current areas
+            if areas == 0
+                add_areas = true;
+            else
+                add_areas = false;
+            end
+
+            for i = 1:obj.num_beams
+                if add_areas
+                    areas(i) = obj.beams(i).area;
+                end
+                lengths(i) = obj.beams(i).length;
+                youngs(i) = obj.beams(i).young;
+            end
+            simpletruss=SimpleTruss(...
+                areas, lengths, youngs, obj.density, obj.a_mat, obj.p_mat ...
+            );
         end
     end
 
