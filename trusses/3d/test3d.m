@@ -15,7 +15,7 @@ truss = truss.add_node([0,0,0], [true,true,true]);
 truss = truss.add_node([0,2,0], [true,true,true]);
 truss = truss.add_node([2,0,0], [true,true,true]);
 truss = truss.add_node([2,2,0], [true,true,true]);
-truss = truss.add_node([1,1,1], [false,false,false], [0,4000,100000]);
+truss = truss.add_node([1,1,1], [false,false,false], [3800,4000,10000]);
 
 for i = 1:size(beam_nodes)
     truss=truss.add_beam(beam_nodes(i,1),beam_nodes(i,2),YOUNGS,areas(i),MAXSTRESS);
@@ -27,4 +27,5 @@ truss=truss.solve();
 displacement = truss.x_mat
 forces = truss.f_mat
 
-truss.plot();
+% truss.plot();
+truss.plot_dis();

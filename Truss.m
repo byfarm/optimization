@@ -4,13 +4,9 @@ classdef Truss
         nodes; % all the nodes in the truss
         beams; % all the beams in the truss
         freedom; % the degrees of freedom
-        s_mat; % the s-matrix
-        b_mat; % the b-matrix
-        k_mat; % the k-matrix
-        a_mat; % the a-matrix
-        p_mat; % the p-matrix
         x_mat; % the x-matrix
         f_mat; % the f-matrix
+        weight;
     end
 
     properties (Access = private)
@@ -19,6 +15,12 @@ classdef Truss
         num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
         plot_multiplier = 0; % how big the arrows will be when plotting
+        s_mat; % the s-matrix
+        b_mat; % the b-matrix
+        k_mat; % the k-matrix
+        a_mat; % the a-matrix
+        p_mat; % the p-matrix
+        density = 10; % the density of the material
     end
 
     methods
@@ -119,6 +121,15 @@ classdef Truss
                 obj.beams(i) = obj.beams(i).calc_stress(obj.f_mat(i));
             end
 
+        end
+
+
+        function obj = calc_weight(obj)
+            % calculates the total weight for the beams on the truss
+            obj.weight = 0;
+            for i = 1:num_beams
+                obj.weight = obj.weight + obj.beams(i).area * obj.beams(i).length * obj.density;
+            end
         end
 
 

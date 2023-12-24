@@ -1,4 +1,4 @@
-plot displacements
 Particle Swarm
+    the position is the area array
+    the velocity is the change in the area array (init as small rand nums)
 Ant Colinization
-Label Beams
