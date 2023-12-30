@@ -9,7 +9,7 @@ classdef Particle
         inertia_weight;
         c1; % acceleration constant 1
         c2; % acceleration constant 2
-        best_past_position;
+        best_past_position; % the best particle
     end
 
     methods
@@ -29,12 +29,13 @@ classdef Particle
             length = max(size(truss.lengths));
 
             obj.position = truss.areas;
-            obj.best_past_position = obj.position;
             obj.velocity = 0.2 * range * rand(length);
 
             obj.inertia_weight = inertia_weight;
             obj.c1 = c1;
             obj.c2 = c2;
+
+            obj.best_past_position = obj;
         end
 
 
