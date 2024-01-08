@@ -100,7 +100,6 @@ classdef Truss
             obj = obj.build_a_mat();
 
             obj.b_mat = obj.a_mat.';
-
         end
 
         function obj = build(obj)
@@ -131,7 +130,7 @@ classdef Truss
         function obj = calc_weight(obj)
             % calculates the total weight for the beams on the truss
             obj.weight = 0;
-            for i = 1:num_beams
+            for i = 1:obj.num_beams
                 obj.weight = obj.weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
         end
@@ -226,6 +225,8 @@ classdef Truss
         end
 
 
+        % this is an optional method that we may need to use for efficient computing
+        %     IGNORE FOR NOW!
         function simpletruss = simplify_truss(obj, areas)
         arguments
             obj (1,1) Truss
