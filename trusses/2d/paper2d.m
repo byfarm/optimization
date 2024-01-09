@@ -43,4 +43,5 @@ for i = 1:size(beam_nodes)
     truss = truss.add_beam(node1, node2, YOUNGS, areas(i), MAXSTRESS);
 end
 
+truss = truss.init_build()
 truss = basic_optimize(truss, 50)

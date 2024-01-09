@@ -94,8 +94,10 @@ for i = 1:size(beam_nodes)
     truss = truss.add_beam(node1, node2, YOUNGS, areas(i), MAXSTRESS);
 end
 
+truss = truss.init_build()
 truss = basic_optimize(truss, 50)
 ```
+Note that the `basic_optimize` function calls the truss's optimize method 50 times
 
 To visualize the trusses, call the `plot` method once the truss is built.
 ```
