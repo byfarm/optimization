@@ -20,7 +20,7 @@ classdef Truss
         k_mat; % the k-matrix
         a_mat; % the a-matrix
         p_mat; % the p-matrix
-        density = 10; % the density of the material
+        density = 0.1; % the density of the material
     end
 
     methods
@@ -133,10 +133,17 @@ classdef Truss
         end
 
 
-        function obj = optimize(obj)
-            % do basic optimization for each beam
+        function obj = optimize_stress(obj)
+            % do basic optimization for each beam using stress
             for i = 1:obj.num_beams
                 obj.beams(i) = obj.beams(i).optimize();
+            end
+        end
+
+        function obj = optimize_dis(obj)
+            % do basic optimization for each beam using displacement
+            for i = 1:max(size(obj.freedom))
+                obj.freedom(i) = obj.freedom(i).optimize();
             end
         end
         
@@ -191,6 +198,7 @@ classdef Truss
             newtruss.nodes = obj.nodes; % insert all nodes
             newtruss.freedom = obj.freedom; % insult the degrees of freedom
 
+            % add displacemnts to the coords
             for i = 1:obj.num_nodes
                 for j = 1:obj.deg_free
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
@@ -201,6 +209,7 @@ classdef Truss
                 end
             end
 
+            % reassign the positon of the degree of freedom
             for i = 1:obj.num_nodes
                 for j = 1:obj.deg_free
                     if obj.freedom(j).node.coords == obj.nodes(i).coords

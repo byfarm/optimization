@@ -6,6 +6,7 @@ classdef DegreeFreedom
         vector; % the direction of the degree of freedom
 
         displacement; % the displacement along the degree of freedom
+        max_displacement = 2.0;
     end
 
     methods
@@ -18,6 +19,11 @@ classdef DegreeFreedom
 
             obj.node = node;
             obj.vector = vector;
+        end
+
+        function obj = optimize(obj)
+            % uses basic optimization fucntion to optimize beam
+            obj.area = obj.area * (abs(obj.displacement) / obj.max_displacement);
         end
     end
 end

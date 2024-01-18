@@ -8,6 +8,6 @@ function truss = basic_optimize(truss, iters)
     for i = 1:iters
         truss = truss.build();
         truss = truss.solve();
-        truss = truss.optimize();
+        truss = truss.optimize_stress();
     end
 end
