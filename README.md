@@ -22,12 +22,6 @@ adds a beam to the truss object, with the start of the beam at the node at the i
 
 For large trusses, it is recomended to set up both the nodes and the beams in for loops. see the examples for reference.
 
-Once all nodes and beams are added to the truss, it is time to build the truss.
-Call the method: init_build to build the a and b matrix. These matrix's will not change as we optimize, so this method only has to be called once.
-```
-truss = truss.init_build()
-```
-
 Now we can enter our loop of optimization. We first call the build method to build the s and k matrixes. From there, call the solve method to solve the truss and vuolla! the truss has been solved!
 
 ```
