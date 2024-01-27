@@ -142,8 +142,17 @@ classdef Truss
 
         function obj = optimize_dis(obj)
             % do basic optimization for each beam using displacement
-            for i = 1:max(size(obj.freedom))
-                obj.freedom(i) = obj.freedom(i).optimize();
+            % find largest displacment
+            largest_dis = max(abs(obj.x_mat));
+            max_dis = 2;
+
+            dis_ratio = largest_dis / max_dis;
+            for i = 1:obj.num_beams
+                obj.beams(i).area = dis_ratio * obj.beams(i).area;
+                if obj.beams(i).area < 0.1
+                    obj.beams(i).area = 0.1
+                end
+
             end
         end
         

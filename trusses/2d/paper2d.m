@@ -1,3 +1,4 @@
+clear;
 YOUNGS = 10000;
 MAXSTRESS = 25;
 
@@ -16,7 +17,8 @@ beam_nodes = [
 
 % areas = rand(size(beam_nodes)) * 10;
 % areas = [30.67, 0.1, 23.76, 14.59, 0.1, 0.1, 8.578, 21.07, 20.96, 0.1, 5076.9];
-areas = [30.068, 0.1, 23.207, 15.168, 0.1, 0.536, 7.462, 21.228, 21.63, 0.1, 5057.36];
+% areas = [30.068, 0.1, 23.207, 15.168, 0.1, 0.536, 7.462, 21.228, 21.63, 0.1, 5057.36];
+areas = ones(max(size(beam_nodes))) * 50;
 
 
 % 2 is the number of dimentions
@@ -46,4 +48,11 @@ for i = 1:size(beam_nodes)
 end
 
 % truss = truss.init_build()
-% truss = basic_optimize(truss, 2)
+truss = basic_optimize(truss, 3000);
+truss.x_mat
+for i = 1:max(size(truss.beams))
+    a_mat(i, 1) = truss.beams(i).area;
+    s_mat(i, 1) = truss.beams(i).stress;
+end
+a_mat
+s_mat
