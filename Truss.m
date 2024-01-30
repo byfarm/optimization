@@ -124,11 +124,11 @@ classdef Truss
         end
 
 
-        function obj = calc_weight(obj)
+        function weight = calc_weight(obj)
             % calculates the total weight for the beams on the truss
-            obj.weight = 0;
-            for i = 1:num_beams
-                obj.weight = obj.weight + obj.beams(i).area * obj.beams(i).length * obj.density;
+            weight = 0;
+            for i = 1:obj.num_beams
+                weight = weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
         end
 
@@ -149,10 +149,7 @@ classdef Truss
             dis_ratio = largest_dis / max_dis;
             for i = 1:obj.num_beams
                 obj.beams(i).area = dis_ratio * obj.beams(i).area;
-                if obj.beams(i).area < 0.1
-                    obj.beams(i).area = 0.1
-                end
-
+                obj.beams(i).area = max(obj.beams(i).area, 0.1);
             end
         end
         

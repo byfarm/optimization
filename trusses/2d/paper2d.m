@@ -48,7 +48,7 @@ for i = 1:size(beam_nodes)
 end
 
 % truss = truss.init_build()
-truss = basic_optimize(truss, 3000);
+truss = basic_optimize(truss, 50);
 truss.x_mat
 for i = 1:max(size(truss.beams))
     a_mat(i, 1) = truss.beams(i).area;
