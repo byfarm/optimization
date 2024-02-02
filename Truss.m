@@ -144,7 +144,7 @@ classdef Truss
             % do basic optimization for each beam using displacement
             % find largest displacment
             largest_dis = max(abs(obj.x_mat));
-            max_dis = 2;
+            max_dis = 10;
 
             dis_ratio = largest_dis / max_dis;
             for i = 1:obj.num_beams
