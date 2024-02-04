@@ -55,9 +55,12 @@ classdef Truss
             % add the degrees of freedom for the node and make p_mat
             for i = 1:obj.dimention
                 if constraint(i) == false
+                    % break into components for each degree of freedom
                     tmp = [false,false,false];
                     tmp(i) = true;
-                    obj.freedom = [obj.freedom, DegreeFreedom(new_node, tmp)];
+                    obj.freedom = [
+                        obj.freedom, DegreeFreedom(new_node, tmp)
+                    ];
 
                     % make p_mat
                     ptmp = dot(double(tmp), forces);
@@ -153,6 +156,40 @@ classdef Truss
             end
         end
         
+        function obj = optimize_specific_dis(obj, freedom_indexes)
+            % only does optimization based on specific degrees of freedom
+            arguments
+                obj (1, 1) Truss % the truss object
+                % the indexes of the freedom to optimize
+                freedom_indexes (:, 1) uint16 {mustBeInteger}
+            end
+
+
+            dis_ratios = [];
+            % find the nodes with displacement constraints
+            for i = 1:length(freedom_indexes)
+                idx = freedom_indexes(i);
+                free = obj.freedom(idx);
+
+                % find the ratio of the displacement to the max
+                ratio = abs(obj.x_mat(idx)) / abs(free.max_displacement);
+
+                % check if the displacement is greater than the max
+                if ratio > 1
+                    % add to the list of ratios
+                    dis_ratios = [dis_ratios, ratio];
+                end
+            end
+
+            if ~isempty(dis_ratios)
+                % go through each and adjust the area
+                dis_ratio = max(dis_ratios)
+                for i = 1:obj.num_beams
+                    obj.beams(i).area = dis_ratio * obj.beams(i).area;
+                    obj.beams(i).area = max(obj.beams(i).area, 0.1);
+                end
+            end
+        end
 
         function plot(obj)
             figure('Position', [10 10 1200 600])

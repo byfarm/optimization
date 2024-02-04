@@ -6,7 +6,7 @@ classdef DegreeFreedom
         vector; % the direction of the degree of freedom
 
         displacement; % the displacement along the degree of freedom
-        max_displacement = 2.0;
+        max_displacement = 2.0; % the maximum displacement allowed
     end
 
     methods
@@ -16,7 +16,6 @@ classdef DegreeFreedom
                 node (1,1) % the node the degree of freedom is at
                 vector (1, 3) % the vector of the degree of freedom
             end
-
             obj.node = node;
             obj.vector = vector;
         end

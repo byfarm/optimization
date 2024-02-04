@@ -1,6 +1,6 @@
-YOUNGS = 10e-7; % kips/in^2
+YOUNGS = 10^7; % kips/in^2
 MAX_STRESS = 25; % kips/in^2
-AREAS = 40;
+AREAS = 40; % in^2
 
 % load the data from th csv file
 T = readtable('large.csv');
@@ -17,7 +17,10 @@ f3 = 20;
 
 constrained_nodes = [600, 800; 800, 800; 1400, 0; 1400, 200];
 
+% add the nodes to the truss
 for i = 1:length(node_x)
+
+    % default forces and constraints
     force = [ 0 ,0 , 0];
     constraints = [ false, false , 0];
 
@@ -38,6 +41,26 @@ for i = 1:length(node_x)
     truss = truss.add_node([node_x(i), node_y(i), 0], constraints, force);
 end
 
+freedom_check = [];
+% add constraints to degrees of freedom
+for i = 1:length(truss.freedom)
+
+    % find the wanted nodes
+    if isequal(truss.freedom(i).node.coords,truss.nodes(1).coords)...
+    && truss.freedom(i).vector(2) == 1
+        % set the max displacement
+        truss.freedom(i).max_displacement = 10;
+        % add the index to the freedom check
+        freedom_check = [freedom_check, i];
+
+    elseif isequal(truss.freedom(i).node.coords,truss.nodes(9).coords)...
+    && truss.freedom(i).vector(1) == 1
+        truss.freedom(i).max_displacement = 10;
+        freedom_check = [freedom_check, i];
+    end
+end
+
+
 
 for i = 1:length(truss1)
     node1_idx = truss1(i);
@@ -47,4 +70,11 @@ end
 
 truss = truss.build;
 truss = truss.solve;
-otruss = basic_optimize(truss, 300);
+otruss = basic_optimize(truss, 50, freedom_check);
+
+for i = 1:length(otruss.beams)
+    fareas(i, 1) = otruss.beams(i).area;
+end
+x_matrix = otruss.x_mat
+fareas
+
