@@ -10,9 +10,6 @@ classdef Truss
     end
 
     properties (Access = private)
-        deg_free = 0; % the degrees of freedom
-        num_beams = 0; % the number of beams
-        num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
         density; % the density of the material
         plot_multiplier = 0; % how big the arrows will be when plotting
@@ -93,16 +90,11 @@ classdef Truss
 
             % adds the beam to the list of beam objects
             obj.beams = [obj.beams, Beam(node1, node2, E, A, idx_node1, idx_node2, max_stress)];
-            obj.num_beams = obj.num_beams + 1;
         end
 
 
         function obj = build(obj)
             % builds all the matrixis
-            obj.num_nodes = size(obj.nodes, 2);
-            obj.num_beams = size(obj.beams, 2);
-            obj.deg_free = size(obj.freedom, 2);
-
             obj = obj.build_s_mat();
             obj = obj.build_a_mat();
 
@@ -118,30 +110,31 @@ classdef Truss
             obj.f_mat = obj.s_mat * obj.b_mat * obj.x_mat;
 
             % calc displacement along each degree of freedom
-            for i = 1:obj.deg_free
+            for i = 1:length(obj.freedom)
                 obj.freedom(i).displacement = obj.x_mat(i);
             end
 
             % calc stress for each beam
-            for i = 1:obj.num_beams
+            for i = 1:length(obj.beams)
                 obj.beams(i) = obj.beams(i).calc_stress(obj.f_mat(i));
             end
 
         end
 
 
-        function weight = calc_weight(obj)
+        function obj = calc_weight(obj)
             % calculates the total weight for the beams on the truss
             weight = 0;
-            for i = 1:obj.num_beams
+            for i = 1:length(obj.beams)
                 weight = weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
+            obj.weight = weight;
         end
 
 
         function obj = optimize_stress(obj)
             % do basic optimization for each beam using stress
-            for i = 1:obj.num_beams
+            for i = 1:length(obj.beams)
                 obj.beams(i) = obj.beams(i).optimize();
             end
         end
@@ -153,7 +146,7 @@ classdef Truss
             max_dis = 10;
 
             dis_ratio = largest_dis / max_dis;
-            for i = 1:obj.num_beams
+            for i = 1:length(obj.beams)
                 obj.beams(i).area = dis_ratio * obj.beams(i).area;
                 obj.beams(i).area = max(obj.beams(i).area, 0.1);
             end
@@ -187,7 +180,7 @@ classdef Truss
             if ~isempty(dis_ratios)
                 % go through each and adjust the area
                 dis_ratio = max(dis_ratios)
-                for i = 1:obj.num_beams
+                for i = 1:length(obj.beams)
                     obj.beams(i).area = dis_ratio * obj.beams(i).area;
                     obj.beams(i).area = max(obj.beams(i).area, 0.1);
                 end
@@ -245,8 +238,8 @@ classdef Truss
             newtruss.freedom = obj.freedom; % insult the degrees of freedom
 
             % add displacemnts to the coords
-            for i = 1:obj.num_nodes
-                for j = 1:obj.deg_free
+            for i = 1:length(obj.nodes)
+                for j = 1:length(obj.freedom)
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
                         % find how much each node has moved
                         dx = obj.freedom(j).vector * obj.freedom(j).displacement;
@@ -256,8 +249,8 @@ classdef Truss
             end
 
             % reassign the positon of the degree of freedom
-            for i = 1:obj.num_nodes
-                for j = 1:obj.deg_free
+            for i = 1:length(obj.nodes)
+                for j = 1:length(obj.freedom)
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
                         newtruss.freedom(j).node = newtruss.nodes(i);
                     end
@@ -265,7 +258,7 @@ classdef Truss
             end
 
             newtruss.beams = obj.beams; % insert all beams
-            for i = 1:obj.num_beams
+            for i = 1:length(obj.beams)
                 % reassign beam nodes
                 newtruss.beams(i).node1 = newtruss.nodes(newtruss.beams(i).idx1);
                 newtruss.beams(i).node2 = newtruss.nodes(newtruss.beams(i).idx2);
@@ -317,12 +310,12 @@ classdef Truss
 
         function obj = build_s_mat(obj)
             % builds the s matrix
-            s_mat = zeros(obj.num_beams);
-            for i = 1:obj.num_beams
+            s_mat = zeros(length(obj.beams));
+            for i = 1:length(obj.beams)
                 area = obj.beams(i).area;
-                length = obj.beams(i).length;
+                rlength = obj.beams(i).length;
                 young = obj.beams(i).young;
-                s_mat(i,i) = (young * area) / length;
+                s_mat(i,i) = (young * area) / rlength;
             end
             obj.s_mat = s_mat;
         end
@@ -330,11 +323,11 @@ classdef Truss
 
         function obj = build_a_mat(obj)
             % builds the a matrix
-            obj.a_mat = zeros(obj.deg_free, obj.num_beams);
+            obj.a_mat = zeros(length(obj.freedom), length(obj.beams));
 
             % go thru each and column
-            for col = 1:obj.num_beams
-                for row = 1:obj.deg_free
+            for col = 1:length(obj.beams)
+                for row = 1:length(obj.freedom)
 
                     % if nodes match then insert the angle int a_mat
                     if obj.freedom(row).node.coords == obj.beams(col).node1.coords
@@ -363,7 +356,7 @@ classdef Truss
 
         function beampnts = get_beam_points(obj)
             % put cords of each beam into matrix
-            for i = 1:obj.num_beams
+            for i = 1:length(obj.beams)
                 beampnts(:,i) = [obj.beams(i).node1.coords, obj.beams(i).node2.coords];
             end
         end
@@ -371,7 +364,7 @@ classdef Truss
 
         function freepnts = get_free_points(obj)
             % get the coordinates to plot the deg of freedom vectors
-            for i = 1:obj.deg_free
+            for i = 1:length(obj.freedom)
                 newpnt = obj.freedom(i).node.coords + obj.plot_multiplier*(obj.freedom(i).vector);
                 freepnts(:,i) = [obj.freedom(i).node.coords, newpnt];
             end
@@ -380,7 +373,7 @@ classdef Truss
 
         function forcepnts = get_force_points(obj)
             % gets the coordinates to plot the force vectors
-            for i = 1:obj.num_nodes
+            for i = 1:length(obj.nodes)
                 forcefactor = obj.nodes(i).forces ./ norm(obj.nodes(i).forces);
                 newpnt = obj.nodes(i).coords + forcefactor*obj.plot_multiplier;
                 forcepnts(:,i) = [obj.nodes(i).coords, newpnt];
@@ -390,7 +383,7 @@ classdef Truss
         
         function constraintpnts = get_constraint_points(obj)
             % gets the coordinates to plot the constraint vectors
-            for i = 1:obj.num_nodes
+            for i = 1:length(obj.nodes)
                 for j = 1:3
                     zerarr = zeros(1, 3);
                     zerarr(j) = obj.plot_multiplier*double(obj.nodes(i).constraints(j));
@@ -403,7 +396,7 @@ classdef Truss
 
         function obj = find_plot_multiplier(obj)
             % sets the size of the vectors to be plotted to be 1/4 the size of a beam
-            for i=1:obj.num_beams
+            for i=1:length(obj.beams)
                 obj.plot_multiplier = max(obj.plot_multiplier, obj.beams(i).length);
             end
             obj.plot_multiplier = obj.plot_multiplier/8;

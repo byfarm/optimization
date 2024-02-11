@@ -24,8 +24,8 @@ function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs)
         opti_truss = opti_truss.group_rods();
         
         % calculate the weight
-        weight = opti_truss.calc_weight();
-        weights(i, :) = [i, weight];
+        opti_truss = opti_truss.calc_weight();
+        weights(i, :) = [i, opti_truss.weight];
 
         stop = auto_stop(weights, 0.01);
         if stop

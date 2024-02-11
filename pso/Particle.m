@@ -21,9 +21,9 @@ classdef Particle
             % initializes the particle
 
             range = max_area - min_area;
-            obj.position = min_area + range * rand(truss.num_beams);
+            obj.position = min_area + range * rand(length(truss.beams));
             obj.best_past_position = obj.position;
-            obj.velocity = 0.2 * range * rand(truss.num_beams);
+            obj.velocity = 0.2 * range * rand(length(truss.beams));
 
             obj.inertia_weight = inertia_weight;
             obj.c1 = c1;
