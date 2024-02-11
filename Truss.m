@@ -14,22 +14,25 @@ classdef Truss
         num_beams = 0; % the number of beams
         num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
+        density; % the density of the material
         plot_multiplier = 0; % how big the arrows will be when plotting
         s_mat; % the s-matrix
         b_mat; % the b-matrix
         k_mat; % the k-matrix
         a_mat; % the a-matrix
         p_mat; % the p-matrix
-        density = 0.1; % the density of the material
+        groups = []; % the groups of nodes
     end
 
     methods
-        function obj = Truss(dimention)
+        function obj = Truss(dimention, density)
             arguments
                 dimention (1,1) uint8 {mustBePositive} = 2 
+                density (1,1) double {mustBePositive} = 0.1
             end
             % sets the number of dimentions that will be analyzed
             obj.dimention = dimention;
+            obj.density = density;
         end
 
 
@@ -272,6 +275,41 @@ classdef Truss
             newtruss = newtruss.build();
             newtruss.plot();
         end
+
+        function obj = create_groups(obj, groups)
+            % creates groups of nodes
+            arguments
+                obj (1, 1) Truss % the truss object
+                groups (:, :) int32 = []% the groups of nodes
+            end
+            % the inputs of groups is the group number by column, and all the
+            % indexes of the rods in the row
+            % ex: [1, 2, 3; 4, 5, 6] would be two groups,
+                % the first with nodes 1, 2, 3
+            obj.groups = groups;
+        end
+
+        function obj = group_rods(obj)
+            % groups the size of the rods together
+            for i = 1:size(obj.groups, 1)
+                % find the group
+                group = obj.groups(i, :);
+                max_area = 0;
+
+                % find the max area in the group
+                for j = 1:length(group)
+                    idx = group(j);
+                    max_area = max(max_area, obj.beams(idx).area);
+                end
+
+                % set the max area for each rod in the group
+                for j = 1:length(group)
+                    idx = group(j);
+                    obj.beams(idx).area = max_area;
+                end
+            end
+        end
+
     end
 
 
