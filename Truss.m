@@ -122,12 +122,13 @@ classdef Truss
         end
 
 
-        function weight = calc_weight(obj)
+        function obj = calc_weight(obj)
             % calculates the total weight for the beams on the truss
             weight = 0;
             for i = 1:length(obj.beams)
                 weight = weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
+            obj.weight = weight;
         end
 
 
