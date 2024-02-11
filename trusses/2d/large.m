@@ -1,6 +1,6 @@
 YOUNGS = 10^7; % kips/in^2
 MAX_STRESS = 25; % kips/in^2
-AREAS = 40; % in^2
+AREAS = 0.40; % in^2
 
 % load the data from th csv file
 T = readtable('large.csv');
@@ -9,6 +9,8 @@ node_x = rmmissing(A(:,1));
 node_y = rmmissing(A(:,2));
 truss1 = rmmissing(A(:,3));
 truss2 = rmmissing(A(:,4));
+
+
 truss = Truss(2);
 
 f1 = 70; % kips
@@ -73,8 +75,10 @@ truss = truss.solve;
 otruss = basic_optimize(truss, 50, freedom_check);
 
 for i = 1:length(otruss.beams)
-    fareas(i, 1) = otruss.beams(i).area;
+    fareas(i, 1:2) = [ otruss.beams(i).area ];
+    fstresses(i, 1:2) = [ otruss.beams(i).stress ];
 end
 x_matrix = otruss.x_mat
 fareas
+fstresses
 
