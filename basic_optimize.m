@@ -6,7 +6,6 @@ function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs)
         freedom_idxs (:,1) int16 = false % the freedom indicies to check
     end
 
-    weights = zeros(iters, 2);
     for i = 1:iters
         % go through stress optimization
         opti_truss = opti_truss.build();
@@ -25,6 +24,11 @@ function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs)
         % calculate the weight
         weight = opti_truss.calc_weight();
         weights(i, :) = [i, weight];
+
+        stop = auto_stop(weights, 0.01);
+        if stop
+            break;
+        end
     end
 
     figure;
