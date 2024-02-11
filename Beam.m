@@ -11,6 +11,7 @@ classdef Beam
         vector; % the vecotr of the beam
 
         max_stress; % the max design stress for the beam
+        min_stress; % the min design stress for the beam
         stress = 0; % the stress once the beam is solved
     end
 
@@ -35,6 +36,7 @@ classdef Beam
             obj.idx1 = i1;
             obj.idx2 = i2;
             obj.max_stress = max_stress;
+            obj.min_stress = -max_stress;
         end
 
         function obj = calc_stress(obj, force)
@@ -44,8 +46,10 @@ classdef Beam
 
         function obj = optimize(obj)
             % uses basic optimization fucntion to optimize beam
+
             obj.area = obj.area * (abs(obj.stress) / obj.max_stress);
             obj.area = max(obj.area, 0.1);
+
         end
     end
 
