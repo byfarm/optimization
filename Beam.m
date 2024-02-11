@@ -46,11 +46,10 @@ classdef Beam
 
         function obj = optimize(obj)
             % uses basic optimization fucntion to optimize beam
-            if obj.stress < 0 
-                obj.area = obj.area * (obj.stress / obj.min_stress);
-            else
-                obj.area = obj.area * (obj.stress / obj.max_stress);
-            end
+
+            obj.area = obj.area * (abs(obj.stress) / obj.max_stress);
+            obj.area = max(obj.area, 0.1);
+
         end
     end
 

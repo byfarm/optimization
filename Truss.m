@@ -14,22 +14,25 @@ classdef Truss
         num_beams = 0; % the number of beams
         num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
+        density; % the density of the material
         plot_multiplier = 0; % how big the arrows will be when plotting
         s_mat; % the s-matrix
         b_mat; % the b-matrix
         k_mat; % the k-matrix
         a_mat; % the a-matrix
         p_mat; % the p-matrix
-        density = 10; % the density of the material
+        groups = []; % the groups of nodes
     end
 
     methods
-        function obj = Truss(dimention)
+        function obj = Truss(dimention, density)
             arguments
                 dimention (1,1) uint8 {mustBePositive} = 2 
+                density (1,1) double {mustBePositive} = 0.1
             end
             % sets the number of dimentions that will be analyzed
             obj.dimention = dimention;
+            obj.density = density;
         end
 
 
@@ -55,9 +58,12 @@ classdef Truss
             % add the degrees of freedom for the node and make p_mat
             for i = 1:obj.dimention
                 if constraint(i) == false
+                    % break into components for each degree of freedom
                     tmp = [false,false,false];
                     tmp(i) = true;
-                    obj.freedom = [obj.freedom, DegreeFreedom(new_node, tmp)];
+                    obj.freedom = [
+                        obj.freedom, DegreeFreedom(new_node, tmp)
+                    ];
 
                     % make p_mat
                     ptmp = dot(double(tmp), forces);
@@ -124,22 +130,69 @@ classdef Truss
         end
 
 
-        function obj = calc_weight(obj)
+        function weight = calc_weight(obj)
             % calculates the total weight for the beams on the truss
-            obj.weight = 0;
-            for i = 1:num_beams
-                obj.weight = obj.weight + obj.beams(i).area * obj.beams(i).length * obj.density;
+            weight = 0;
+            for i = 1:obj.num_beams
+                weight = weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
         end
 
 
-        function obj = optimize(obj)
-            % do basic optimization for each beam
+        function obj = optimize_stress(obj)
+            % do basic optimization for each beam using stress
             for i = 1:obj.num_beams
                 obj.beams(i) = obj.beams(i).optimize();
             end
         end
+
+        function obj = optimize_dis(obj)
+            % do basic optimization for each beam using displacement
+            % find largest displacment
+            largest_dis = max(abs(obj.x_mat));
+            max_dis = 10;
+
+            dis_ratio = largest_dis / max_dis;
+            for i = 1:obj.num_beams
+                obj.beams(i).area = dis_ratio * obj.beams(i).area;
+                obj.beams(i).area = max(obj.beams(i).area, 0.1);
+            end
+        end
         
+        function obj = optimize_specific_dis(obj, freedom_indexes)
+            % only does optimization based on specific degrees of freedom
+            arguments
+                obj (1, 1) Truss % the truss object
+                % the indexes of the freedom to optimize
+                freedom_indexes (:, 1) uint16 {mustBeInteger}
+            end
+
+
+            dis_ratios = [];
+            % find the nodes with displacement constraints
+            for i = 1:length(freedom_indexes)
+                idx = freedom_indexes(i);
+                free = obj.freedom(idx);
+
+                % find the ratio of the displacement to the max
+                ratio = abs(obj.x_mat(idx)) / abs(free.max_displacement);
+
+                % check if the displacement is greater than the max
+                if ratio > 1
+                    % add to the list of ratios
+                    dis_ratios = [dis_ratios, ratio];
+                end
+            end
+
+            if ~isempty(dis_ratios)
+                % go through each and adjust the area
+                dis_ratio = max(dis_ratios)
+                for i = 1:obj.num_beams
+                    obj.beams(i).area = dis_ratio * obj.beams(i).area;
+                    obj.beams(i).area = max(obj.beams(i).area, 0.1);
+                end
+            end
+        end
 
         function plot(obj)
             figure('Position', [10 10 1200 600])
@@ -191,6 +244,7 @@ classdef Truss
             newtruss.nodes = obj.nodes; % insert all nodes
             newtruss.freedom = obj.freedom; % insult the degrees of freedom
 
+            % add displacemnts to the coords
             for i = 1:obj.num_nodes
                 for j = 1:obj.deg_free
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
@@ -201,6 +255,7 @@ classdef Truss
                 end
             end
 
+            % reassign the positon of the degree of freedom
             for i = 1:obj.num_nodes
                 for j = 1:obj.deg_free
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
@@ -220,6 +275,41 @@ classdef Truss
             newtruss = newtruss.build();
             newtruss.plot();
         end
+
+        function obj = create_groups(obj, groups)
+            % creates groups of nodes
+            arguments
+                obj (1, 1) Truss % the truss object
+                groups (:, :) int32 = []% the groups of nodes
+            end
+            % the inputs of groups is the group number by column, and all the
+            % indexes of the rods in the row
+            % ex: [1, 2, 3; 4, 5, 6] would be two groups,
+                % the first with nodes 1, 2, 3
+            obj.groups = groups;
+        end
+
+        function obj = group_rods(obj)
+            % groups the size of the rods together
+            for i = 1:size(obj.groups, 1)
+                % find the group
+                group = obj.groups(i, :);
+                max_area = 0;
+
+                % find the max area in the group
+                for j = 1:length(group)
+                    idx = group(j);
+                    max_area = max(max_area, obj.beams(idx).area);
+                end
+
+                % set the max area for each rod in the group
+                for j = 1:length(group)
+                    idx = group(j);
+                    obj.beams(idx).area = max_area;
+                end
+            end
+        end
+
     end
 
 
