@@ -10,7 +10,6 @@ classdef Truss
     end
 
     properties (Access = private)
-        num_nodes = 0; % the number of nodes
         dimention; % the number of dimentions analyzing
         density; % the density of the material
         plot_multiplier = 0; % how big the arrows will be when plotting
@@ -96,8 +95,6 @@ classdef Truss
 
         function obj = build(obj)
             % builds all the matrixis
-            obj.num_nodes = size(obj.nodes, 2);
-
             obj = obj.build_s_mat();
             obj = obj.build_a_mat();
 
@@ -240,7 +237,7 @@ classdef Truss
             newtruss.freedom = obj.freedom; % insult the degrees of freedom
 
             % add displacemnts to the coords
-            for i = 1:obj.num_nodes
+            for i = 1:length(obj.nodes)
                 for j = 1:length(obj.freedom)
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
                         % find how much each node has moved
@@ -251,7 +248,7 @@ classdef Truss
             end
 
             % reassign the positon of the degree of freedom
-            for i = 1:obj.num_nodes
+            for i = 1:length(obj.nodes)
                 for j = 1:length(obj.freedom)
                     if obj.freedom(j).node.coords == obj.nodes(i).coords
                         newtruss.freedom(j).node = newtruss.nodes(i);
@@ -375,7 +372,7 @@ classdef Truss
 
         function forcepnts = get_force_points(obj)
             % gets the coordinates to plot the force vectors
-            for i = 1:obj.num_nodes
+            for i = 1:length(obj.nodes)
                 forcefactor = obj.nodes(i).forces ./ norm(obj.nodes(i).forces);
                 newpnt = obj.nodes(i).coords + forcefactor*obj.plot_multiplier;
                 forcepnts(:,i) = [obj.nodes(i).coords, newpnt];
@@ -385,7 +382,7 @@ classdef Truss
         
         function constraintpnts = get_constraint_points(obj)
             % gets the coordinates to plot the constraint vectors
-            for i = 1:obj.num_nodes
+            for i = 1:length(obj.nodes)
                 for j = 1:3
                     zerarr = zeros(1, 3);
                     zerarr(j) = obj.plot_multiplier*double(obj.nodes(i).constraints(j));
