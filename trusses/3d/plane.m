@@ -1,6 +1,6 @@
-YOUNGS = 10^7; 
-MAX_STRESS = 25; 
-AREAS = 0.40; 
+YOUNGS = 1.17e6; 
+MAX_STRESS = 500; 
+AREAS = 0.25^2;  % in^2 
 
 % read in the tables
 T = readtable('planepoints.csv.txt');
@@ -26,7 +26,7 @@ for i = 1:length(xcoord)
     % set where the wing attaches to the truss to carry the loads
     if isequal(coord, [0,8,4]) || isequal(coord, [5,8,4])
         constraints = [false false false];
-        forces = [10 10 10];
+        forces = [0 0 100];
 
     % set top constraints to false
     elseif zcoord(i) == 4
@@ -53,4 +53,4 @@ for i = 1:length(truss.beams)
 end
 % disp('Stresses in the beams');
 % disp(stresses);
-truss.plot()
+truss.plot_dis()
