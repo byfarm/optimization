@@ -11,8 +11,8 @@ node_coord_y = rmmissing(A(:,2));
 node_idx_1 = rmmissing(A(:,3));
 node_idx_2 = rmmissing(A(:,4));
 
-% add groups
-% groups = rmmissing(A(:,5:end));
+% load groups
+groups = rmmissing(A(:,5:end));
 
 dimentions = 2;
 density = 0.1;  % lbs/in^3
@@ -76,7 +76,7 @@ for i = 1:length(node_idx_1)
 end
 
 % add group constraints to the truss
-% truss = truss.create_groups(groups);
+truss = truss.create_groups(groups);
 
 % build and solve the truss
 truss = truss.build;

@@ -273,7 +273,7 @@ classdef Truss
             % creates groups of nodes
             arguments
                 obj (1, 1) Truss % the truss object
-                groups (:, :) int32 = []% the groups of nodes
+                groups (:, :) int32 = []  % the groups of nodes
             end
             % the inputs of groups is the group number by column, and all the
             % indexes of the rods in the row
@@ -286,13 +286,13 @@ classdef Truss
             % groups the size of the rods together
             for i = 1:size(obj.groups, 1)
                 % find the group
-                group = obj.groups(i, :);
+                group = obj.groups(~isnan(obj.groups(:, i)));
                 max_area = 0;
 
                 % find the max area in the group
                 for j = 1:length(group)
                     idx = group(j);
-                    max_area = max(max_area, obj.beams(idx).area);
+                    max_area = max(max_area, obj.beams(idx).area)
                 end
 
                 % set the max area for each rod in the group

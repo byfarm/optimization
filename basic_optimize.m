@@ -11,6 +11,8 @@ function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs)
         opti_truss = opti_truss.build();
         opti_truss = opti_truss.solve();
         opti_truss = opti_truss.optimize_stress();
+
+        % group rods
         opti_truss = opti_truss.group_rods();
 
         % now through displacement optimization
@@ -21,6 +23,8 @@ function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs)
         else
             opti_truss = opti_truss.optimize_dis();
         end
+
+        % group rods
         opti_truss = opti_truss.group_rods();
         
         % calculate the weight
