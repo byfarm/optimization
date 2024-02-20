@@ -284,21 +284,27 @@ classdef Truss
 
         function obj = group_rods(obj)
             % groups the size of the rods together
-            for i = 1:size(obj.groups, 1)
+            for i = 1:size(obj.groups, 2)
                 % find the group
-                group = obj.groups(~isnan(obj.groups(:, i)));
+                group = obj.groups(2:end, i);
                 max_area = 0;
 
                 % find the max area in the group
                 for j = 1:length(group)
                     idx = group(j);
-                    max_area = max(max_area, obj.beams(idx).area)
+                    if idx == 0
+                        continue
+                    end
+                    max_area = max(max_area, obj.beams(idx).area);
                 end
 
                 % set the max area for each rod in the group
-                for j = 1:length(group)
-                    idx = group(j);
-                    obj.beams(idx).area = max_area;
+                for k = 1:length(group)
+                    idx2 = group(k);
+                    if idx2 == 0
+                        continue
+                    end
+                    obj.beams(idx2).area = max_area;
                 end
             end
         end
