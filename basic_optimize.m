@@ -1,9 +1,10 @@
-function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs)
+function opti_truss = basic_optimize(opti_truss, iters, freedom_idxs, autostop)
 % uses basic optimization to optimize the truss
 arguments
     opti_truss (1,1) Truss % truss object
     iters (1,1) int16 % number of iterations want performed
     freedom_idxs (:,1) int16 = false % the freedom indicies to check
+    autostop (1,1) logical = true % whether to use autostop
 end
 
 for i = 1:iters
@@ -31,9 +32,11 @@ for i = 1:iters
     opti_truss = opti_truss.calc_weight();
     weights(i, :) = [i, opti_truss.weight];
     
-    stop = auto_stop(weights, 0.01);
-    if stop
-        break;
+    if autostop
+        stop = auto_stop(weights, 0.01);
+        if stop
+            break;
+        end
     end
 end
 

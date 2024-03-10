@@ -341,7 +341,6 @@ classdef Truss
                         % find the cos by normalizing the dot product
                         v1 = double(obj.freedom(row).vector);
                         v2 = obj.beams(col).vector;
-                        dotprod = dot(v1, v2);
                         cos_angle = dot(v1, v2) / (norm(v1) * norm(v2));
                         obj.a_mat(row, col) = cos_angle;
 

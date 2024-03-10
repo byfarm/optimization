@@ -79,8 +79,8 @@ end
 truss = truss.create_groups(groups);
 
 % build and solve the truss
-truss = truss.build;
-truss = truss.solve;
+truss = truss.build();
+truss = truss.solve();
 otruss = basic_optimize(truss, 50, freedom_check);
 
 for i = 1:length(otruss.beams)
