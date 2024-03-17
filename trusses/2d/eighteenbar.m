@@ -3,6 +3,8 @@ YOUNGS = 1000;
 MAXSTRESS = 100;
 P = 10;
 truss = Truss(2);
+
+% add the nodes
 for i = 5:-1:0
     if i == 0
         forces = [0,0,0];
@@ -17,6 +19,7 @@ for i = 5:-1:0
     end
 end
 
+% add the beams
 bars = [
     1,2;
     1,3;
