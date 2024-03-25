@@ -1,5 +1,5 @@
 classdef Beam
-
+    
     properties
         node1; % the coords of one end of the beam
         node2; % the coords of the other end of the beam
@@ -9,12 +9,12 @@ classdef Beam
         area; % the cross-sectional area of the beam
         length; % the length of the beam
         vector; % the vecotr of the beam
-
+        
         max_stress; % the max design stress for the beam
         min_stress; % the min design stress for the beam
         stress = 0; % the stress once the beam is solved
     end
-
+    
     methods
         function obj = Beam(node1, node2, young, area, i1, i2, max_stress)
             % initializes the beam object
@@ -38,19 +38,35 @@ classdef Beam
             obj.max_stress = max_stress;
             obj.min_stress = -max_stress;
         end
-
+        
         function obj = calc_stress(obj, force)
             % calculates the stress for the beam
             obj.stress = force / obj.area;
         end
-
+        
         function obj = optimize(obj)
             % uses basic optimization fucntion to optimize beam
-
-            obj.area = obj.area * abs(obj.stress / obj.max_stress);
+            if obj.stress < 0
+                obj.area = obj.area * abs(obj.stress / obj.min_stress);
+            else
+                obj.area = obj.area * abs(obj.stress / obj.max_stress);
+            end
             obj.area = max(obj.area, 0.1);
-
+            
+        end
+        
+        function obj = calc_buckling_stress(obj, beta)
+            arguments
+                obj (1,1) Beam
+                beta (1,1) double   % the buckling factor
+            end
+            % calculates the buckling stress for the beam
+            bar_buckling_stress = -beta * obj.young * obj.area / (obj.length^2);
+            
+            % set the minimum stress to the lesser of the min stress and
+            % the buckling stress
+            obj.min_stress = -min(abs([obj.min_stress, bar_buckling_stress]));
         end
     end
-
+    
 end

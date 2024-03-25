@@ -23,6 +23,7 @@ areas = ones(max(size(beam_nodes))) * 50;
 
 % 2 is the number of dimentions
 truss = Truss(2);
+truss = truss.set_max_dis(2);
 
 
 % this is the loads for case 1
@@ -55,5 +56,11 @@ for i = 1:max(size(truss.beams))
     a_mat(i, 1) = truss.beams(i).area;
     s_mat(i, 1) = truss.beams(i).stress;
 end
+disp('Displacements:')
+x_matrix = truss.x_mat
+disp('Areas:')
 a_mat
+disp('Stresses:')
 s_mat
+disp('Weight of the optimized truss:')
+truss.weight

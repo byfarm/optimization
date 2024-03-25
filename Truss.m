@@ -19,6 +19,7 @@ classdef Truss
         a_mat; % the a-matrix
         p_mat; % the p-matrix
         groups = []; % the groups of nodes
+        max_dis = 10000; % the max displacement
     end
 
     methods
@@ -140,12 +141,15 @@ classdef Truss
         end
 
         function obj = optimize_dis(obj)
+            % optimize the truss based on displacement
+            arguments
+                obj (1,1) Truss
+            end
             % do basic optimization for each beam using displacement
             % find largest displacment
             largest_dis = max(abs(obj.x_mat));
-            max_dis = 10;
 
-            dis_ratio = largest_dis / max_dis;
+            dis_ratio = largest_dis / obj.max_dis;
             for i = 1:length(obj.beams)
                 obj.beams(i).area = dis_ratio * obj.beams(i).area;
                 obj.beams(i).area = max(obj.beams(i).area, 0.1);
@@ -159,7 +163,6 @@ classdef Truss
                 % the indexes of the freedom to optimize
                 freedom_indexes (:, 1) uint16 {mustBeInteger}
             end
-
 
             dis_ratios = [];
             % find the nodes with displacement constraints
@@ -179,7 +182,7 @@ classdef Truss
 
             if ~isempty(dis_ratios)
                 % go through each and adjust the area
-                dis_ratio = max(dis_ratios)
+                dis_ratio = max(dis_ratios);
                 for i = 1:length(obj.beams)
                     obj.beams(i).area = dis_ratio * obj.beams(i).area;
                     obj.beams(i).area = max(obj.beams(i).area, 0.1);
@@ -277,8 +280,13 @@ classdef Truss
             end
             % the inputs of groups is the group number by column, and all the
             % indexes of the rods in the row
-            % ex: [1, 2, 3; 4, 5, 6] would be two groups,
-                % the first with nodes 1, 2, 3
+            % ex: [
+            % NaN, NaN, NaN;
+            % 1, 2, 3;
+            % 4, 5, 6;
+            % ] would be 3 groups,
+            % the first with nodes 1, 4
+            % the first row is for labels
             obj.groups = groups;
         end
 
@@ -309,6 +317,15 @@ classdef Truss
             end
         end
 
+        function obj = set_max_dis(obj, max_dis)
+            arguments
+                obj (1, 1) Truss % the truss object
+                max_dis (1, 1) double {mustBeNumeric} % the max displacement
+            end
+            % sets the max displacement
+            obj.max_dis = max_dis;
+        end
+
     end
 
 
@@ -316,14 +333,13 @@ classdef Truss
 
         function obj = build_s_mat(obj)
             % builds the s matrix
-            s_mat = zeros(length(obj.beams));
+            obj.s_mat = zeros(length(obj.beams));
             for i = 1:length(obj.beams)
                 area = obj.beams(i).area;
                 rlength = obj.beams(i).length;
                 young = obj.beams(i).young;
-                s_mat(i,i) = (young * area) / rlength;
+                obj.s_mat(i,i) = (young * area) / rlength;
             end
-            obj.s_mat = s_mat;
         end
 
 

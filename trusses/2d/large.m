@@ -88,11 +88,9 @@ for i = 1:length(otruss.beams)
     fstresses(i, 1) = [ otruss.beams(i).stress ];
 end
 x_matrix = otruss.x_mat
-fareas
-fstresses
-
-% for i = 1:length(otruss.beams)
-%     if abs(otruss.beams(i).stress) > MAX_STRESS
-%         fprintf('Beam %.0f area %.2f force %.2f stress %.2f\n', i, otruss.beams(i).area, otruss.f_mat(i), otruss.beams(i).stress);
-%     end
-% end
+disp('Areas:')
+a_mat
+disp('Stresses:')
+s_mat
+disp('Weight of the optimized truss:')
+otruss.weight
