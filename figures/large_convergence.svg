@@ -80,15 +80,15 @@
       /><line y2="461.5701" style="fill:none;" x1="498.25" x2="498.25" y1="467"
       /><line y2="461.5701" style="fill:none;" x1="566.125" x2="566.125" y1="467"
       /><line y2="461.5701" style="fill:none;" x1="634" x2="634" y1="467"
-      /><line y2="44.4299" style="fill:none;" x1="91" x2="91" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="158.875" x2="158.875" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="226.75" x2="226.75" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="294.625" x2="294.625" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="362.5" x2="362.5" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="430.375" x2="430.375" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="498.25" x2="498.25" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="566.125" x2="566.125" y1="39"
-      /><line y2="44.4299" style="fill:none;" x1="634" x2="634" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="91" x2="91" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="158.875" x2="158.875" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="226.75" x2="226.75" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="294.625" x2="294.625" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="362.5" x2="362.5" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="430.375" x2="430.375" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="498.25" x2="498.25" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="566.125" x2="566.125" y1="39"
+      /><line y2="44.4301" style="fill:none;" x1="634" x2="634" y1="39"
     /></g
     ><g transform="translate(91,473.6666)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-5" xml:space="preserve" y="17" style="stroke:none;"
@@ -150,42 +150,42 @@
     /></g
     ><g transform="translate(84.3333,467)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >3400</text
+      >3600</text
     ></g
     ><g transform="translate(84.3333,395.6667)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >3500</text
+      >3700</text
     ></g
     ><g transform="translate(84.3333,324.3333)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >3600</text
+      >3800</text
     ></g
     ><g transform="translate(84.3333,253)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >3700</text
+      >3900</text
     ></g
     ><g transform="translate(84.3333,181.6667)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >3800</text
+      >4000</text
     ></g
     ><g transform="translate(84.3333,110.3333)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >3900</text
+      >4100</text
     ></g
     ><g transform="translate(84.3333,39)" style="font-size:16.6667px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-38" xml:space="preserve" y="6.5" style="stroke:none;"
-      >4000</text
+      >4200</text
     ></g
     ><g transform="translate(41.3333,252.9998) rotate(-90)" style="font-size:18.3333px; fill:rgb(38,38,38); text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; stroke:rgb(38,38,38); color-interpolation:linearRGB;"
     ><text x="-49" xml:space="preserve" y="-5" style="stroke:none;"
       >Weight (lbs)</text
     ></g
-    ><g transform="translate(362.5004,36.2499)" style="font-size:18.3333px; text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; color-interpolation:linearRGB; font-weight:bold;"
+    ><g transform="translate(362.5004,36.2501)" style="font-size:18.3333px; text-rendering:geometricPrecision; color-rendering:optimizeQuality; image-rendering:optimizeQuality; color-interpolation:linearRGB; font-weight:bold;"
     ><text x="-84.5" xml:space="preserve" y="-5" style="stroke:none;"
       >Weight vs. Iteration</text
     ></g
     ><g style="stroke-linecap:butt; fill:rgb(0,114,189); text-rendering:geometricPrecision; image-rendering:optimizeQuality; color-rendering:optimizeQuality; stroke-linejoin:round; stroke:rgb(0,114,189); color-interpolation:linearRGB; stroke-width:0.8333;"
-    ><path d="M91 92.5 L158.875 357.86 L226.75 424.2 L294.625 448.4533 L362.5 457.7267 L430.375 459.1533 L498.25 457.7267 L566.125 455.5867 L634 455.5867" style="fill:none; fill-rule:evenodd;"
+    ><path d="M91 96.78 L158.875 374.2667 L226.75 422.06 L294.625 431.3333 L362.5 432.76 L430.375 431.3333 L498.25 427.0533 L566.125 424.9133 L634 424.9133" style="fill:none; fill-rule:evenodd;"
     /></g
   ></g
 ></svg
