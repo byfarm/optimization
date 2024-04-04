@@ -91,3 +91,12 @@ s_mat
 disp('Weight of the optimized truss:')
 otruss.weight
 
+
+buckling_constrained = [];
+for i = 1:max(size(otruss.beams))
+    buckling_constrained(i, 1) = otruss.beams(i).buckling_const(MAXSTRESS, false);
+    buckling_constrained(i, 2) = otruss.beams(i).buckling_const(MAXSTRESS, true);
+end
+disp("column 1: if the buckling constraint is applicable")
+disp("column 2: if the buckling constraint is active")
+buckling_constrained

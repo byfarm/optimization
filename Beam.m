@@ -67,6 +67,29 @@ classdef Beam
             % the buckling stress
             obj.min_stress = -min(abs([obj.min_stress, bar_buckling_stress]));
         end
+
+        function buckle_const = buckling_const(obj, reg_stress, check_if_active)
+            arguments
+                obj (1,1) Beam
+                reg_stress (1,1) 
+                check_if_active (1,1) = true
+            end
+
+            if abs(obj.min_stress) == reg_stress
+                buckle_const = false;
+
+            elseif obj.stress <= obj.min_stress + 0.1 ...
+                & obj.stress >= obj.min_stress - 0.1
+                buckle_const = true;
+
+            elseif check_if_active 
+                buckle_const = false;
+
+            else
+                buckle_const = true;
+            end
+
+        end
     end
     
 end
