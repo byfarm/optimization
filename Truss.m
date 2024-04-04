@@ -129,7 +129,7 @@ classdef Truss
             for i = 1:length(obj.beams)
                 weight = weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
-            obj.weight = weight;
+            obj.weight = weight
         end
 
 

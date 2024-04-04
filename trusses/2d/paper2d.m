@@ -1,6 +1,6 @@
 clear;
-YOUNGS = 10000;
-MAXSTRESS = 25;
+YOUNGS = 10000;  % ksi
+MAXSTRESS = 25;  % ksi
 
 beam_nodes = [
     5, 3;
@@ -22,7 +22,7 @@ areas = ones(max(size(beam_nodes))) * 50;
 
 
 % 2 is the number of dimentions
-truss = Truss(2);
+truss = Truss(2, 0.1);
 truss = truss.set_max_dis(2);
 
 

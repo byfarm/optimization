@@ -30,7 +30,7 @@ for i = 1:iters
     
     % calculate the weight
     opti_truss = opti_truss.calc_weight();
-    weights(i, :) = [i, opti_truss.weight];
+    weights(i, :) = [single(i), double(opti_truss.weight)];
     
     if autostop
         stop = auto_stop(weights, 0.01);
