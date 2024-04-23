@@ -7,6 +7,7 @@ classdef Truss
         x_mat; % the x-matrix
         f_mat; % the f-matrix
         weight;
+        base_weight = 0;
     end
 
     properties (Access = private)
@@ -125,11 +126,10 @@ classdef Truss
 
         function obj = calc_weight(obj)
             % calculates the total weight for the beams on the truss
-            weight = 0;
+            obj.weight = obj.base_weight;
             for i = 1:length(obj.beams)
-                weight = weight + obj.beams(i).area * obj.beams(i).length * obj.density;
+                obj.weight = obj.weight + obj.beams(i).area * obj.beams(i).length * obj.density;
             end
-            obj.weight = weight
         end
 
 
