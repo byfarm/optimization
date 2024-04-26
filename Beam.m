@@ -90,6 +90,15 @@ classdef Beam
             end
 
         end
+
+        function exceeded = exceed_stress(obj)
+            % function to see if the stress is exceeded
+            if obj.stress < 0
+                exceeded = abs(obj.stress / obj.min_stress) > 0.99;
+            else
+                exceeded = abs(obj.stress / obj.max_stress) > 0.99;
+            end
+        end
     end
     
 end

@@ -65,3 +65,7 @@ disp('Stresses:')
 s_mat
 disp('Weight of the optimized truss:')
 truss.weight
+res = Results(truss);
+res.active_stresses()
+res.num_active_stresses()
+res.active_displacements_specific(dis_const)
