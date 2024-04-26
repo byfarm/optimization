@@ -21,6 +21,10 @@ classdef Node
             obj.constraints = constraints;
             obj.forces = forces;
         end
+
+        function equal = eq(obj1, obj2)
+            equal = isequal(obj1.coords, obj2.coords);
+        end
     end
 
 end

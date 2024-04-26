@@ -190,6 +190,24 @@ classdef Truss
             end
         end
 
+        function [obj, idx] = set_displacement(obj, displacement, node, vector)
+            % sets the maximum displacement on a degree of freedom
+        arguments
+            obj (1,1) Truss
+            displacement (1,1)  % the magnitude of the displacement constraint
+            node (1,:) {mustBeInteger} % the index of the node
+            vector (1,3) {mustBeInteger} % the direction of the constraint
+        end
+        % returns: idx -> the index of the degree of freedom we want checked
+            g_node = obj.nodes(node);
+            for i = 1:length(obj.freedom)
+                if g_node == obj.freedom(i).node && isequal(vector, obj.freedom(i).vector)
+                    obj.freedom(i).max_displacement = displacement;
+                    idx = i;
+                end
+            end
+        end
+
         function plot(obj)
             figure('Position', [10 10 1200 600])
             obj = obj.find_plot_multiplier();
