@@ -95,8 +95,8 @@ truss = truss.build();
 truss = truss.solve();
 otruss = basic_optimize(truss, 50, freedom_check);
 
-a_mat = []
-s_mat = []
+a_mat = [];
+s_mat = [];
 for i = 1:length(otruss.beams)
     a_mat(i, 1) = [ otruss.beams(i).area ];
     s_mat(i, 1) = [ otruss.beams(i).stress ];

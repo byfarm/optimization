@@ -31,7 +31,8 @@ classdef Results
             active_constraints = zeros(length(free_idxs), 2);
             for i = 1:length(free_idxs)
                 idx = free_idxs(i);
-                active = obj.truss.freedom(idx).displacement >= obj.truss.freedom(idx).max_displacement - 0.01;
+                active = abs(obj.truss.freedom(idx).displacement) >= abs(obj.truss.freedom(idx).max_displacement) - 0.01;
+                %active = obj.truss.freedom(idx).displacement;
                 active_constraints(i, 1) = idx;
                 active_constraints(i, 2) = active;
             end

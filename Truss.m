@@ -120,7 +120,6 @@ classdef Truss
             for i = 1:length(obj.beams)
                 obj.beams(i) = obj.beams(i).calc_stress(obj.f_mat(i));
             end
-
         end
 
 
